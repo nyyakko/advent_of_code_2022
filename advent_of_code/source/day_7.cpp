@@ -178,7 +178,7 @@ std::size_t calculate_file_structure_size(auto const node, std::size_t total = 0
     return (folderSize <= 100'000) ? total + folderSize : total;
 }
 
-std::size_t find_smallest_folder_to_delete(auto const node, auto const requiredSize, std::size_t lastSeenSize = 0)
+std::size_t find_smallest_folder(auto const node, auto const requiredSize, std::size_t lastSeenSize = 0)
 {
     assert(node && "NODE WAS NULLPTR");
     assert(node->get_kind() == "FOLDER_NODE" && "NODE WASNT A FOLDER");
@@ -191,7 +191,7 @@ std::size_t find_smallest_folder_to_delete(auto const node, auto const requiredS
 
         if (child->get_kind() == "FOLDER_NODE")
         {
-            lastSeenSize = find_smallest_folder_to_delete(std::static_pointer_cast<FolderNode>(child), requiredSize, lastSeenSize);
+            lastSeenSize = find_smallest_folder(std::static_pointer_cast<FolderNode>(child), requiredSize, lastSeenSize);
         }
     }
 
@@ -219,7 +219,7 @@ void part_2(auto root)
     static constexpr auto REQUIRED_FREE_SPACE  = 30'000'000;
 
     auto requiredSize = REQUIRED_FREE_SPACE - (AVAILABLE_DISK_TOTAL - root->get_total_bytes());
-    auto result = find_smallest_folder_to_delete(root, requiredSize);
+    auto result = find_smallest_folder(root, requiredSize);
 
     fmt::println("part 2: {} ({} required)", result, requiredSize);
 }
