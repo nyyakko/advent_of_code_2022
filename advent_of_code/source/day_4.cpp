@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <sstream>
 
+// DAY 4: Camp Cleanup
+
 auto read_line(auto&& stream)
 {
     std::string line {};
