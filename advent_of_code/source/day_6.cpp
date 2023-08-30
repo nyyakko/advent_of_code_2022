@@ -48,12 +48,12 @@ auto find_packet_marker(auto&& input, auto size)
 
 void part_1(auto&& input)
 {
-    fmt::println("marker is at: {}", find_packet_marker(input, 4zu)); 
+    fmt::println("part 1: {}", find_packet_marker(input, 4zu)); 
 }
 
 void part_2(auto&& input)
 {
-    fmt::println("marker is at: {}", find_packet_marker(input, 14zu));
+    fmt::println("part 2: {}", find_packet_marker(input, 14zu));
 }
 
 int main()
