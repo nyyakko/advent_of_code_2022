@@ -78,8 +78,6 @@ void part_2(auto input, auto crates)
 
 int main()
 {
-    using namespace std::literals;
-    
     auto input = std::filesystem::path("inputs/day_5.txt");
 
     std::vector<std::vector<char>> crates
