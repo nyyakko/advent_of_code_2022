@@ -114,28 +114,25 @@ auto search_node(auto const& workingFolder, auto nodeName)
 
 void parse_list_command(auto&& inputStream, auto&& currentWorkingFolder)
 {
-    while (!inputStream.eof() && inputStream.ignore(1, ' ') && inputStream.peek() != '$')
+    auto lhs = ""s;
+    auto rhs = ""s;
+                                                                                            
+    inputStream >> lhs >> rhs;
+                                                                                            
+    if (lhs == "dir" && !search_node<FolderNode>(currentWorkingFolder, rhs))
     {
-        auto lhs = ""s;
-        auto rhs = ""s;
-                                                                                                
-        inputStream >> lhs >> rhs;
-                                                                                                
-        if (lhs == "dir" && !search_node<FolderNode>(currentWorkingFolder, rhs))
+        currentWorkingFolder->children.emplace_back(std::make_shared<FolderNode>(FolderNode
         {
-            currentWorkingFolder->children.emplace_back(std::make_shared<FolderNode>(FolderNode
-            {
-                rhs, currentWorkingFolder
-            }));
-        }
-                                                                                                
-        if (lhs != "dir" && !search_node<FileNode>(currentWorkingFolder, rhs))
+            rhs, currentWorkingFolder
+        }));
+    }
+                                                                                            
+    if (lhs != "dir" && !search_node<FileNode>(currentWorkingFolder, rhs))
+    {
+        currentWorkingFolder->children.emplace_back(std::make_shared<FileNode>(FileNode
         {
-            currentWorkingFolder->children.emplace_back(std::make_shared<FileNode>(FileNode
-            {
-                rhs, currentWorkingFolder, static_cast<std::size_t>(std::stoi(lhs))
-            }));
-        }
+            rhs, currentWorkingFolder, static_cast<std::size_t>(std::stoi(lhs))
+        }));
     }
 }
 
@@ -195,12 +192,10 @@ std::size_t find_smallest_folder(auto const node, auto const requiredSize, std::
         }
     }
 
-    if (folderSize >= requiredSize && folderSize <= lastSeenSize)
-    {
-        return folderSize;
-    }
+    auto isCurrentFolderSufficientlySmall = folderSize >= requiredSize && folderSize <= lastSeenSize;
+    auto isPreviousFolderSufficientlySmall = lastSeenSize && lastSeenSize >= requiredSize;
 
-    if (lastSeenSize && lastSeenSize >= requiredSize)
+    if (isPreviousFolderSufficientlySmall && !isCurrentFolderSufficientlySmall)
     {
         return lastSeenSize;
     }
@@ -240,7 +235,10 @@ int main()
 
         if (command == "ls")
         {
-            parse_list_command(inputStream, currentWorkingFolder);
+            while (!inputStream.eof() && inputStream.ignore(1, ' ') && inputStream.peek() != '$')
+            {
+                parse_list_command(inputStream, currentWorkingFolder);
+            }
         }
 
         if (command == "cd")
