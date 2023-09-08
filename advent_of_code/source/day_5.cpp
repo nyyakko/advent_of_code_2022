@@ -1,9 +1,9 @@
-#include <filesystem>
 #include <fmt/format.h>
 
 #include <fstream>
 #include <ranges>
 #include <vector>
+#include <filesystem>
 
 // DAY 5: Supply Stacks
 
